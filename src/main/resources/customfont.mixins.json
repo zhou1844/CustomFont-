@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.yudoniaodudu.customfont.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "customfont.refmap.json",
+  "client": [
+    "TrueTypeGlyphSheetInfoMixin",
+    "RenderTypeIntensityMixin",
+    "RenderStateShardAccessor",
+    "TitleScreenSdfIndicatorMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
