@@ -62,8 +62,9 @@ public final class SdfGenerator {
         byte[] mask = new byte[w * h];
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
-                int v = image.getLuminanceOrAlpha(x0 + x, y0 + y) & 0xFF;
-                mask[y * w + x] = (byte) v;
+                int rgba = image.getPixelRGBA(x0 + x, y0 + y);
+                int a = (rgba >>> 24) & 0xFF;
+                mask[y * w + x] = (byte) a;
             }
         }
 
@@ -87,7 +88,8 @@ public final class SdfGenerator {
                 float sd = inside ? (float) Math.sqrt(distToOutside2[idx]) : -(float) Math.sqrt(distToInside2[idx]);
                 float v = 0.5f + (sd / (float) pixelRange) * 0.5f;
                 int out = clamp255(Math.round(v * 255.0f));
-                image.setPixelLuminance(x0 + x, y0 + y, (byte) out);
+                int rgba = (0xFF << 24) | (out << 16) | (out << 8) | out;
+                image.setPixelRGBA(x0 + x, y0 + y, rgba);
             }
         }
     }

@@ -20,7 +20,7 @@ public abstract class TrueTypeGlyphSheetInfoMixin {
         if (SdfSettings.enabled()) {
             try {
                 long start = System.nanoTime();
-                SdfGenerator.convertRegionLuminanceToSdfInPlace(image, 0, 0, w, h, SdfSettings.pixelRange());
+                SdfGenerator.convertRegionLuminanceToSdfInPlace(image, d, e, w, h, SdfSettings.pixelRange());
                 if (!customfont$loggedOnce) {
                     System.out.println("CustomFont: SDF generation successful for glyph. Time: " + (System.nanoTime() - start) + "ns");
                     customfont$loggedOnce = true;

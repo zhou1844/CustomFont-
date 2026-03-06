@@ -4,8 +4,8 @@
     "srcrgb": "srcalpha",
     "dstrgb": "1-srcalpha"
   },
-  "vertex": "customfont:sdf_text",
-  "fragment": "customfont:sdf_text",
+  "vertex": "customfont:sdf_text_offset",
+  "fragment": "customfont:sdf_text_offset",
   "attributes": [
     "Position",
     "Color",

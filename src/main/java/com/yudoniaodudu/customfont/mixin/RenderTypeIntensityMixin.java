@@ -11,6 +11,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderType.class)
 public abstract class RenderTypeIntensityMixin {
+    @Inject(method = "text(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;", at = @At("HEAD"), cancellable = true)
+    private static void customfont$text(ResourceLocation texture, CallbackInfoReturnable<RenderType> cir) {
+        if (SdfSettings.enabled()) {
+            cir.setReturnValue(SdfRenderTypes.text(texture));
+        }
+    }
+
+    @Inject(method = "textPolygonOffset(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;", at = @At("HEAD"), cancellable = true)
+    private static void customfont$textPolygonOffset(ResourceLocation texture, CallbackInfoReturnable<RenderType> cir) {
+        if (SdfSettings.enabled()) {
+            cir.setReturnValue(SdfRenderTypes.textPolygonOffset(texture));
+        }
+    }
+
+    @Inject(method = "textSeeThrough(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;", at = @At("HEAD"), cancellable = true)
+    private static void customfont$textSeeThrough(ResourceLocation texture, CallbackInfoReturnable<RenderType> cir) {
+        if (SdfSettings.enabled()) {
+            cir.setReturnValue(SdfRenderTypes.textSeeThrough(texture));
+        }
+    }
+
     @Inject(method = "textIntensity(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;", at = @At("HEAD"), cancellable = true)
     private static void customfont$textIntensity(ResourceLocation texture, CallbackInfoReturnable<RenderType> cir) {
         if (SdfSettings.enabled()) {

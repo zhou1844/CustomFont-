@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class SdfRenderTypes {
+    private static final Map<ResourceLocation, RenderType> TEXT = new ConcurrentHashMap<>();
+    private static final Map<ResourceLocation, RenderType> TEXT_SEE_THROUGH = new ConcurrentHashMap<>();
+    private static final Map<ResourceLocation, RenderType> TEXT_POLYGON_OFFSET = new ConcurrentHashMap<>();
     private static final Map<ResourceLocation, RenderType> TEXT_INTENSITY = new ConcurrentHashMap<>();
     private static final Map<ResourceLocation, RenderType> TEXT_INTENSITY_SEE_THROUGH = new ConcurrentHashMap<>();
     private static final Map<ResourceLocation, RenderType> TEXT_INTENSITY_POLYGON_OFFSET = new ConcurrentHashMap<>();
@@ -22,7 +25,68 @@ public final class SdfRenderTypes {
         return ClientShaders.SDF_TEXT;
     });
 
+    private static final RenderStateShard.ShaderStateShard SHADER_OFFSET = new RenderStateShard.ShaderStateShard(() -> {
+        if (ClientShaders.SDF_TEXT_OFFSET == null) {
+            System.err.println("CustomFont: SDF_TEXT_OFFSET shader is null! This will likely cause a crash.");
+        }
+        return ClientShaders.SDF_TEXT_OFFSET;
+    });
+
     private SdfRenderTypes() {
+    }
+
+    public static RenderType text(ResourceLocation texture) {
+        return TEXT.computeIfAbsent(texture, t -> RenderType.create(
+                "customfont_sdf_text",
+                DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+                VertexFormat.Mode.QUADS,
+                256,
+                false,
+                true,
+                RenderType.CompositeState.builder()
+                        .setShaderState(SHADER)
+                        .setTextureState(new RenderStateShard.TextureStateShard(t, true, false))
+                        .setTransparencyState(RenderStateShardAccessor.getTRANSLUCENT_TRANSPARENCY())
+                        .setLightmapState(RenderStateShardAccessor.getLIGHTMAP())
+                        .createCompositeState(false)
+        ));
+    }
+
+    public static RenderType textPolygonOffset(ResourceLocation texture) {
+        return TEXT_POLYGON_OFFSET.computeIfAbsent(texture, t -> RenderType.create(
+                "customfont_sdf_text_polygon_offset",
+                DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+                VertexFormat.Mode.QUADS,
+                256,
+                false,
+                true,
+                RenderType.CompositeState.builder()
+                        .setShaderState(SHADER_OFFSET)
+                        .setTextureState(new RenderStateShard.TextureStateShard(t, true, false))
+                        .setTransparencyState(RenderStateShardAccessor.getTRANSLUCENT_TRANSPARENCY())
+                        .setLightmapState(RenderStateShardAccessor.getLIGHTMAP())
+                        .setLayeringState(RenderStateShardAccessor.getPOLYGON_OFFSET_LAYERING())
+                        .createCompositeState(false)
+        ));
+    }
+
+    public static RenderType textSeeThrough(ResourceLocation texture) {
+        return TEXT_SEE_THROUGH.computeIfAbsent(texture, t -> RenderType.create(
+                "customfont_sdf_text_see_through",
+                DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+                VertexFormat.Mode.QUADS,
+                256,
+                false,
+                true,
+                RenderType.CompositeState.builder()
+                        .setShaderState(SHADER)
+                        .setTextureState(new RenderStateShard.TextureStateShard(t, true, false))
+                        .setTransparencyState(RenderStateShardAccessor.getTRANSLUCENT_TRANSPARENCY())
+                        .setLightmapState(RenderStateShardAccessor.getLIGHTMAP())
+                        .setDepthTestState(RenderStateShardAccessor.getNO_DEPTH_TEST())
+                        .setWriteMaskState(RenderStateShardAccessor.getCOLOR_WRITE())
+                        .createCompositeState(false)
+        ));
     }
 
     public static RenderType textIntensity(ResourceLocation texture) {
@@ -51,7 +115,7 @@ public final class SdfRenderTypes {
                 false,
                 true,
                 RenderType.CompositeState.builder()
-                        .setShaderState(SHADER)
+                        .setShaderState(SHADER_OFFSET)
                         .setTextureState(new RenderStateShard.TextureStateShard(t, true, false))
                         .setTransparencyState(RenderStateShardAccessor.getTRANSLUCENT_TRANSPARENCY())
                         .setLightmapState(RenderStateShardAccessor.getLIGHTMAP())
@@ -78,7 +142,4 @@ public final class SdfRenderTypes {
                         .createCompositeState(false)
         ));
     }
-
-    // Removed get() method as fields are public in Mojang mappings or accessible via AT if needed.
-    // In Mojang mappings (which are used here), these fields are public static final.
 }

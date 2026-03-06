@@ -8,7 +8,7 @@
     "TrueTypeGlyphSheetInfoMixin",
     "RenderTypeIntensityMixin",
     "RenderStateShardAccessor",
-    "TitleScreenSdfIndicatorMixin"
+    "StringDecomposerBracketSpacingMixin"
   ],
   "injectors": {
     "defaultRequire": 1
