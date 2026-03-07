@@ -11,6 +11,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class StringDecomposerBracketSpacingMixin {
     private static final int CUSTOMFONT_LEFT_PAREN = 0xFF08;
     private static final int CUSTOMFONT_LEFT_SQUARE_BRACKET = 0x3010;
+    private static final int CUSTOMFONT_LEFT_DOUBLE_QUOTE = 0x201C;
+    private static final int CUSTOMFONT_LEFT_CORNER_BRACKET = 0x300C;
+    private static final int CUSTOMFONT_LEFT_WHITE_CORNER_BRACKET = 0x300E;
     private static final int CUSTOMFONT_SPACE = 0x20;
 
     @Redirect(
@@ -25,7 +28,11 @@ public abstract class StringDecomposerBracketSpacingMixin {
             return false;
         }
 
-        if (codePoint != CUSTOMFONT_LEFT_PAREN && codePoint != CUSTOMFONT_LEFT_SQUARE_BRACKET) {
+        if (codePoint != CUSTOMFONT_LEFT_PAREN
+                && codePoint != CUSTOMFONT_LEFT_SQUARE_BRACKET
+                && codePoint != CUSTOMFONT_LEFT_DOUBLE_QUOTE
+                && codePoint != CUSTOMFONT_LEFT_CORNER_BRACKET
+                && codePoint != CUSTOMFONT_LEFT_WHITE_CORNER_BRACKET) {
             return true;
         }
 
